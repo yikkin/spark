@@ -1,0 +1,17 @@
+// class Personne(val name : String , var age : Int) {}
+
+// var p1 = new Personne("Stephane" , 32)
+// var p2 = new Personne("Ali" , 25)
+
+// p1.name 
+// p2.name
+
+// p1.age
+// p2.age
+
+case class Message(expediteur : String , destinataire : String , body : String)
+
+val message1 = Message("thomas@gmail.com" , "durand@gmail.com" , "how you doin'?")
+message1.expediteur = "fred@gmail.com"
+
+//si on ne precise pas la variabilite de l element il est par defaut considerer comme "val"

@@ -1,0 +1,28 @@
+import org.apache.spark.sql.SparkSession
+//import spark.implicits._
+import org.apache.spark.sql.functions._
+
+val spark = SparkSession.builder().getOrCreate()
+
+// val df = spark.read.format("csv").option("header", "true").option("inferSchema" , "true").csv("titanic.csv")
+// df.printSchema
+
+// df.show(3)
+
+//csv part
+
+// val rowrdd = sc.parallelize(Seq(Row("john", 27),Row("eric",25),Row("joel" , 20)))
+// val schema = new StructType().add(StructField("name",StringType, true)).add(StructField("age", IntegerType,true))
+// val df = spark.createDataFrame(rowrdd , schema)
+// df.write.format("csv").save("name_age")
+
+//json part
+//val dfjson = spark.read.json("people.json")
+//dfjson.write.json("people_json")
+//val dfjson_registered = spark.read.json("people_json/part-00000-9902bc55-debf-48eb-99f2-29e884cce8d7-c000.json")
+
+//parquet part
+//val dfparquet = spark.read.parquet("users.parquet")
+//dfparquet.write.parquet("users_parquet")
+val dfparquet_registered = spark.read.parquet("users_parquet/part-00000-93b960aa-c924-44b3-886c-d3d03223abac-c000.snappy.parquet")
+dfparquet_registered.show

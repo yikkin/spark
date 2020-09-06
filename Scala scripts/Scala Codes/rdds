@@ -1,0 +1,88 @@
+import org.apache.spark.sql.SparkSession
+import org.apache.log4j._
+Logger.getLogger("org").setLevel(Level.ERROR)
+
+val spark = SparkSession.builder().appName("app RDDs").getOrCreate()
+
+//val data = spark.read.format("csv").option("inferSchema" , "true").csv("Temperature_1950.csv")
+//data.printSchema
+
+val rdd = sc.textFile("Temperature_1950.csv")
+val rdd1 = rdd.filter(x=> x.contains("MAX"))
+
+val rddtuple = rdd1.map(x=>(x.split(",")(0) , x.split(",")(3)))
+
+val solutionMax = rddtuple.reduceByKey((x,y) => if (x<y) y else x)
+val solutionMax = rddtuple.reduceByKey((x,y) => math.max(x,y))
+
+solutionMax.collect
+
+
+
+
+
+
+
+// val rddfile = sc.textFile("demos.txt")
+// rddfile.collect
+
+// val capital = rddfile.map(x=>x.toUpperCase())
+// capital.collect
+
+// val rdd = sc.parallelize(List(List(1,2,3),List(4,5,8)))
+// rdd.flatMap(x=>x).collect
+// rdd.map(x=>x).collect
+
+// rddfile.filter(x=>x.contains("friedrich"))
+
+//val rddname = sc.parallelize(List("pierre", "alpha" , "mehdi" , "pierre" , "thierry"))
+//val rddnamedistinct = rddname.distinct().collect
+
+// val rddnamegroupby = rddname.groupBy(x=> x.charAt(0))
+// rddnamegroupby.collect
+
+// val rdd = sc.parallelize(1 to 1000)
+// rdd.count
+// val sampledata = rdd.sample(false , 0.5)
+// sampledata.count
+
+// val rdd1 = sc.parallelize(List(1,2,3,4))
+// val rdd2 = sc.parallelize(List(3,4,5,6))
+
+// rdd1.union(rdd2).collect
+// rdd1.cartesian(rdd2).collect
+
+// val rdd = sc.parallelize(1 to 10)
+// rdd.collect
+// rdd.reduce((x,y) => x+y)
+
+// val rdd0 = sc.parallelize(1 to 10 ,2)
+// rdd0.glom.collect
+// rdd0.fold(9)((x,y) => x+y)
+
+// rdd1.intersection(rdd2).collect
+
+// val rdd = sc.parallelize(List("0,12" , "1,12","0,4" , "2,11" ,"1,1"))
+// val rddpair = rdd.map(x=>(x.split(",")(0) , x.split(",")(1).toInt))
+// val rbkrdd = rddpair.reduceByKey((x,y) => x+y).collect
+
+// val squaredvaluerdd = rddpair.mapValues(x=>x*x)
+// squaredvaluerdd.collect
+
+// val sortbykeyrdd = rddpair.sortByKey() //for descending order : sortbykey(false)
+
+// val rdd1 = sc.parallelize(List("a,1","b,0" ,"c,7"))
+// val rdd11 = rdd1.map(x=>(x.split(",")(0) , x.split(",")(1)))
+
+// val rdd2 = sc.parallelize(List("d,6","e,4" ,"f,9"))
+// val rdd22 = rdd1.map(x=>(x.split(",")(0) , x.split(",")(1)))
+
+// val rddjoin = rdd11.join(rdd22)
+// val rojrdd = rdd11.rightOuterJoin(rdd22)
+// rojrdd.collect
+
+// val lojrdd = rdd11.leftOuterJoin(rdd22)
+// lojrdd.collect
+
+// val cgrdd = rdd11.cogroup(rdd22)
+// cgrdd.collect

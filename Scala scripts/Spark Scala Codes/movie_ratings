@@ -1,0 +1,18 @@
+final case class Rating(movieid : Int , rating : Int)
+
+val lines = sc.textFile("ml-100k/u.data")
+
+val lines2 = lines.map(x =>{val fields = x.split("\t");Rating(fields(1).toInt , fields(2).toInt)})
+
+val ratingdf = lines2.toDF()
+
+ratingdf.printSchema()
+
+val topmovieids = ratingdf.groupBy("movieid").count().orderBy(desc("count"))
+
+//val dftopmovieids = topmovieids.toDF()
+//dftopmovieids.show(3)
+
+ratingdf.registerTempTable("ratings")
+
+select * from ratings limit 10

@@ -1,0 +1,25 @@
+import org.apache.spark._
+import org.apache.spark.streaming._
+
+import org.apache.log4j._
+Logger.getLogger("org").setLevel(Level.ERROR)
+
+//val spark = SparkSession.builder().getOrCreate()
+
+val conf = new SparkConf().setMaster("local[2]").setAppName("NetworkWordCount").set("spark.driver.allowMultipleContexts","true")
+val context = new StreamingContext(sc , Seconds(2))
+// val lines = context.socketTextStream("localhost" , 5555)
+// val words = lines.flatMap(_.split(" "))
+
+// val wordCounts = words.map(x => (x,1)).reduceByKey(_+_)
+// wordCounts.print()
+// context.start()
+// context.awaitTermination()
+
+val mystream = context.socketTextStream("localhost" , 5555)
+val words = mystream.flatMap(_.split(" ")).map(x => (x,1))
+val wordCounts = words.reduceByKeyAndWindow((x : Int , y : Int) => x+y , Seconds(60) , Seconds(4))
+wordCounts.print()
+context.start()
+
+

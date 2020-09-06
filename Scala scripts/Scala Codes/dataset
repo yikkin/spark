@@ -1,0 +1,12 @@
+import org.apache.spark.sql.SparkSession
+
+//val rdd = sc.parallelize(List((1,"spark") , (2,"databricks") ,(3,"hadoop")))
+//val df = rdd.toDF("id" , "name")
+
+//val dataset = df.as[(Int , String)]
+
+case class Company(name : String , foundingyear : Int , numemployees : Int)
+val inputSeq = List(Company("abc" , 1998 , 310) , Company("xyz" , 1983 , 940) , Company("nop" , 2008 , 83))
+
+val df = sc.parallelize(inputSeq).toDF()
+val companyds = df.as[Company]

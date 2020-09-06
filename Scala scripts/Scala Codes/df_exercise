@@ -1,0 +1,14 @@
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions._
+
+val spark = SparkSession.builder().getOrCreate()
+
+val rdd = sc.parallelize(Seq(Row("AJ" , 1560 , "kareem") , Row("malone" , 1476 , "karl") , Row("jordan" , 1072,"michael"), Row("chamberlain" , 1045 ,"wilt") , Row("oneil" , 1117 , "shaquille")))
+
+val lensup10udf = udf{x : String => (x.length() > 10)}
+
+val schema = new StructType().add(StructField("name",StringType, true)).add(StructField("points", IntegerType,true)).add(StructField("firstname", StringType,true))
+
+val df = spark.createDataFrame(rdd, schema)
+
+df.withColumn("lensup10", lensup10udf(col("name"))).show()
